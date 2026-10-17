@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Maple's Bean — Coffee Roasted With Care</title>
+<meta name="description" content="Maple's Bean — small-batch roasted coffee, fresh pastries, and coffee gear. Order online for pickup or delivery." />
+<meta property="og:title" content="Maple's Bean — Coffee Roasted With Care">
+<meta property="og:description" content="Single-origin beans, fresh pastries, and coffee gear — roasted and baked in small batches.">
+<meta property="og:image" content="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&q=80">
+<meta name="theme-color" content="#3E2723">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval';">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&family=Poppins:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+<style>
+@keyframes fadeSlideIn {
+  from { opacity:0; transform:translateY(-12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity:0; transform:scale(.94) translateY(8px); }
+  to   { opacity:1; transform:scale(1) translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<!-- PROMO BANNER -->
+<div id="promoBanner">
+  <span>FIRST ORDER · <strong>MAPLESBEAN10</strong> · ₱500 OFF</span>
+  <a href="#shop">Order Now</a>
+  <button id="promoBannerClose" aria-label="Close">×</button>
+</div>
+
+<!-- LOADER -->
+<div id="loader" class="loader">
+  <div class="loader-inner">
+    <div class="loader-mark">
+      <span>M</span><span>A</span><span>P</span><span>L</span><span>E</span><span>'</span><span>S</span>
+      <span class="sp">&nbsp;</span>
+      <span>B</span><span>E</span><span>A</span><span>N</span>
+    </div>
+    <div class="loader-bar"><span></span></div>
+    <div class="loader-sub">ROASTED WITH CARE — EST. MANILA</div>
+  </div>
+</div>
+
+<!-- NAVBAR -->
+<header id="navbar" class="navbar">
+  <div class="nav-inner">
+    <a href="#" class="brand">
+      <span class="brand-mark">M</span>
+      <span class="brand-text">Maple's Bean<sup>®</sup></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#shop">Shop</a>
+      <a href="#new">New</a>
+      <a href="#featured">Featured</a>
+      <a href="#collections">Menu</a>
+      <a href="#about">Our Story</a>
+    </nav>
+    <div class="nav-actions">
+      <div id="liveVisitors" style="margin-right:8px"></div>
+      <button class="icon-btn" id="searchBtn" aria-label="Search">Search</button>
+      <button class="icon-btn" id="wishBtn" aria-label="Wishlist">Wishlist<span class="badge" id="wishCount">0</span></button>
+      <button class="icon-btn" id="cartBtn" aria-label="Cart">Cart<span class="badge" id="cartCount">0</span></button>
+      <button class="icon-btn" id="authBtn" aria-label="Account">Account</button>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu">Menu</button>
+    </div>
+  </div>
+  <div class="search-drawer" id="searchDrawer">
+    <input type="text" id="searchInput" placeholder="Search coffee, pastries, gear..." />
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#shop">Shop</a>
+  <a href="#new">New</a>
+  <a href="#featured">Featured</a>
+  <a href="#collections">Menu</a>
+  <a href="#about">Our Story</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-media">
+<img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=1200&q=80" alt="Steaming cup of coffee at Maple's Bean"/>    <div class="hero-overlay"></div>
+    <div class="hero-stain hero-stain-1"></div>
+    <div class="hero-stain hero-stain-2"></div>
+  </div>
+  <div class="hero-content">
+    <div class="eyebrow">★ SMALL-BATCH ROASTED — SINCE DAY ONE</div>
+    <h1 class="hero-title">
+ <span style="color: #aea28fc4; text-shadow: none;">Maple's Bean</span><br/>
+<span style="color: #aea28fc4; text-shadow: none;">Coffee</span><br/>
+<em style="background-image: linear-gradient(90deg, #6c6056c9, #aea28fc4, #716652); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; text-shadow: none; display: inline-block;">House.</em>
+</h1>
+<p class="hero-sub" style="color: #bb9c6c; text-shadow: none;">
+  Hi! I’m kuya J welcome to<br>
+  maple’s bean
+</p>
+
+<div class="hero-cta">      <a href="#shop" class="btn btn-primary">Shop the Roast</a>
+      <a href="#about" class="btn btn-ghost">Our Story →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hs"><span>12+</span><small>Single Origins</small></div>
+      <div class="hs"><span>48h</span><small>Fresh Roast</small></div>
+      <div class="hs"><span>5-Star</span><small>2,400+ Reviews</small></div>
+    </div>
+  </div>
+  <div class="hero-marquee"><span>FRESH ROAST WEEKLY &nbsp;&middot;&nbsp; Maple's Bean &nbsp;&middot;&nbsp; LOCALLY ROASTED IN MANILA &nbsp;&middot;&nbsp; FREE SHIPPING OVER ₱1,500 &nbsp;&middot;&nbsp; </span><span>FRESH ROAST WEEKLY &nbsp;&middot;&nbsp; Maple's Bean &nbsp;&middot;&nbsp; LOCALLY ROASTED IN MANILA &nbsp;&middot;&nbsp; FREE SHIPPING OVER ₱1,500 &nbsp;&middot;&nbsp; </span></div>
+</section>
+
+<!-- SHOP CONTROLS -->
+<section id="shop" class="shop-controls reveal">
+  <div class="controls-row">
+    <div class="cat-tabs" id="catTabs">
+      <button class="cat active" data-cat="all">All</button>
+      <button class="cat" data-cat="new">New</button>
+      <button class="cat" data-cat="best">Best Sellers</button>
+      <button class="cat" data-cat="featured">Featured</button>
+      <button class="cat" data-cat="beans">Coffee Beans</button>
+      <button class="cat" data-cat="pastries">Pastries</button>
+      <button class="cat" data-cat="drinkware">Drinkware</button>
+      
+    </div>
+    <div class="controls-right">
+      <select id="sortSelect">
+        <option value="featured">Sort — Featured</option>
+        <option value="new">Newest</option>
+        <option value="low">Price — Low to High</option>
+        <option value="high">Price — High to Low</option>
+      </select>
+      <div class="price-range">
+        <label>Max ₱<span id="priceVal">200</span></label>
+        <input type="range" id="priceRange" min="60" max="200" value="200" step="500">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="new" class="section-block">
+  <div class="section-head reveal">
+    <span class="rule"></span>
+    <h2>The Menu</h2>
+    <p>Small-batch coffee, fresh pastries, and everyday essentials.</p>
+  </div>
+  <div class="product-grid" id="productGrid"></div>
+  <div class="empty-state" id="emptyState" hidden>No pieces match the current filters.</div>
+</section>
+
+<!-- RECENTLY VIEWED -->
+<section id="recentSection" class="section-block" style="display:none">
+  <div class="section-head reveal">
+    <span class="rule"></span>
+    <h2>Recently Viewed</h2>
+    <p>Your browsing history.</p>
+  </div>
+  <div class="recent-grid" id="recentGrid"></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="story">
+  <div class="story-img reveal">
+     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTocpwzajRdJeENJLfg-Ny1Pqzi0_pAruBkZQ5jppWmo_SaAakwcJqEXs54&s=10" alt="Maple's Bean roastery" loading="lazy"/>
+    <div class="story-img-badge">
+      
+    </div>  
+  </div>
+  <div class="story-text reveal">
+    <span class="eyebrow">OUR STORY</span>
+    <h2>Roasted in small batches,<br/>brewed with <em>intention</em>.</h2>
+    <p>Maples Bean began in August 2025 with a simple goal: to provide quality food and beverages that bring people together. Founded by Mr. Jordan Romero, Maples Bean was created to be more than just a coffee shop—it is a welcoming space where the community can enjoy delicious food, refreshing beverages, and a warm, comfortable atmosphere. From the very beginning, we have been committed to serving our customers with quality, care, and genuine hospitality, one cup and one meal at a time.</p>
+    <div class="story-features">
+      <div class="sf"><span class="sf-num">01</span><div><strong>Direct Trade</strong><small>Farm-to-cup sourcing</small></div></div>
+      <div class="sf"><span class="sf-num">02</span><div><strong>Fresh Roast</strong><small>Within 48 hours of ship</small></div></div>
+      <div class="sf"><span class="sf-num">03</span><div><strong>Small-Batch</strong><small>Never mass-produced</small></div></div>
+    </div>
+    <a href="#featured" class="btn btn-ghost">Explore Featured →</a>
+  </div>
+
+</section>
+
+<!-- FEATURED -->
+<section id="featured" class="section-block">
+  <div class="section-head reveal">
+    <span class="rule"></span>
+    <h2>Featured Editions</h2>
+  
+  </div>
+  <div class="product-grid" id="featuredGrid"></div>
+</section>
+
+<!-- COLLECTIONS -->
+<section id="collections" class="collections reveal">
+  <div class="col-card" data-cat="beans" style="background-image:linear-gradient(180deg,rgba(45,24,16,.1),rgba(20,10,5,.92)),url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCLIJ4UJVl8Hb1MlkLfEuCT1DH83RR4rqIeBfA3oMzhQ&s)"><div><span class="eyebrow">01</span><h3>Coffee Beans</h3><p>Single origin & blends</p></div></div>
+  <div class="col-card" data-cat="pastries" style="background-image:linear-gradient(180deg,rgba(45,24,16,.1),rgba(20,10,5,.92)),url(https://images.unsplash.com/photo-1509365465985-25d11c17e812?w=900&q=85)"><div><span class="eyebrow">02</span><h3>Fresh Pastries</h3><p>Baked every morning</p></div></div>
+  <div class="col-card" data-cat="drinkware" style="background-image:linear-gradient(180deg,rgba(45,24,16,.1),rgba(20,10,5,.92)),url(https://images.unsplash.com/photo-1517256064527-09c73fc73e38?w=900&q=85)"><div><span class="eyebrow">03</span><h3>Drinkware</h3><p>Mugs & tumblers</p></div></div>
+  <div class="col-card" data-cat="merch" style="background-image:linear-gradient(180deg,rgba(45,24,16,.1),rgba(20,10,5,.92)),url(https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=900&q=85)"><div><span class="eyebrow">04</span><h3>Merch & Gifts</h3><p>Coffee culture goods</p></div></div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery reveal">
+  <div class="section-head"><span class="rule"></span><h2>@maplesbean</h2><p>Brewed and shared daily.</p></div>
+  <div class="gallery-grid" id="galleryGrid"></div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter reveal">
+  <span class="eyebrow">JOIN THE INNER CIRCLE</span>
+  <h2>Brew Better Mornings.</h2>
+  <p>New roasts, seasonal drinks, quiet releases, and invitations to the table.</p>
+  <form id="newsForm" class="news-form">
+    <input type="email" required placeholder="your@email.com" />
+    <button class="btn btn-primary" type="submit">Subscribe →</button>
+  </form>
+  <small class="news-fine">Free to join. Unsubscribe anytime. We respect your inbox.</small>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="brand"><span class="brand-mark small">M</span> Maple's Bean<sup>®</sup></div>
+      <p class="muted">Manila. © <span id="yr"></span> Maple's Bean. All rights reserved.</p>
+      <p class="muted" style="margin-top:12px">Sign in to earn loyalty points with every purchase.</p>
+      <div class="footer-socials">
+        <a href="https://www.instagram.com/maplesbeancoffeehouse/?fbclid=IwY2xjawUp2nJleHRuA2FlbQIxMABwZG9mAWJyaWQRMDJKZ3NaZW9FNXppU1VNR1JzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeWD4cZ7c9al0enMeAVvSINjuxsYOtXfs-jvh7iY85yjsYikhequ6MeNXgJtg_aem_RBrZlRBjrExmd7-1dOpY_w" aria-label="Instagram">IG</a>
+        <a href="maplebean2025@gmail.com" aria-label="Email">YT</a>
+        <a href="https://www.facebook.com/profile.php?id=61578845510826" aria-label="Facebook">FB</a>
+      </div>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <a href="#new">New</a><a href="#featured">Featured</a><a href="#collections">Menu</a>
+    </div>
+    <div>
+      <h4>Roastery</h4>
+      <a href="#about">Our Story</a><a href="#">Contact</a><a href="#">Press</a>
+    </div>
+    <div>
+      <h4>Connect</h4>
+      <a href="https://www.instagram.com/maplesbeancoffeehouse/?fbclid=IwY2xjawUp2nJleHRuA2FlbQIxMABwZG9mAWJyaWQRMDJKZ3NaZW9FNXppU1VNR1JzcnRjBmFwcF9pZBAyMjIwMzkxNzg4MjAwODkyAAEeWD4cZ7c9al0enMeAVvSINjuxsYOtXfs-jvh7iY85yjsYikhequ6MeNXgJtg_aem_RBrZlRBjrExmd7-1dOpY_w">Instagram</a><a href="https://www.facebook.com/profile.php?id=61578845510826">Facebook</a><a href="
+MAPLE BEAN Coffee HOUSE">Email</a>
+      <a href="#" id="supportFloatLink" style="margin-top:12px;display:flex;align-items:center;gap:6px"><span class="live-dot"></span>Live Support</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <small>Made with care in Manila. Crafted for coffee lovers.</small>
+  </div>
+</footer>
+
+<!-- CART DRAWER -->
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button class="icon-btn" id="closeCart">Close</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="row muted"><span>VATable sales</span><span id="subTotal">₱0</span></div>
+    <div class="row muted"><span>VAT 12% (Philippines / BIR)</span><span id="tax">₱0</span></div>
+    <div class="row muted"><span>Shipping</span><span>Calculated at checkout</span></div>
+    <div class="promo">
+      <input type="text" id="promoCode" placeholder="Promo code" />
+      <button id="applyPromo">Apply</button>
+    </div>
+    <div class="row total"><span>Total</span><span id="total">₱0</span></div>
+    <button class="btn btn-primary block" id="checkoutBtn">Checkout — Sign In Required</button>
+  </div>
+</aside>
+
+<!-- WISHLIST DRAWER -->
+<aside class="cart-drawer" id="wishDrawer">
+  <div class="cart-head">
+    <h3>Wishlist</h3>
+    <button class="icon-btn" id="closeWish">Close</button>
+  </div>
+  <div class="cart-items" id="wishItems"></div>
+</aside>
+
+<div class="overlay" id="overlay"></div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal" id="productModal">
+  <div class="modal-inner">
+    <button class="icon-btn modal-close" id="modalClose">✕</button>
+    <div class="modal-gallery" id="modalGallery"></div>
+    <div class="modal-info">
+      <div class="eyebrow" id="modalCat"></div>
+      <h2 id="modalName"></h2>
+      <div class="modal-price" id="modalPrice"></div>
+      <div class="modal-stock" id="modalStock"></div>
+      <p id="modalDesc"></p>
+      <div class="opt-label">Size <button id="sizeGuideBtn">Size Guide</button></div>
+      <div class="opt-row" id="modalSizes"></div>
+      <div class="opt-label">Color</div>
+      <div class="opt-row" id="modalColors"></div>
+      <div class="qty">
+        <button id="qtyMinus">−</button><span id="qtyVal">1</span><button id="qtyPlus">+</button>
+      </div>
+      <div class="modal-cta">
+        <button class="btn btn-primary block" id="modalAdd">Add to Cart</button>
+        <button class="btn btn-ghost block" id="modalBuy">Buy Now</button>
+      </div>
+      <button id="modalShare">Share this product</button>
+
+      <!-- REVIEWS -->
+      <div id="reviewsSection">
+        <div class="reviews-head">
+          <h4>Customer Reviews</h4>
+          <div class="reviews-summary" id="reviewsSummary"></div>
+        </div>
+        <div id="reviewsList"></div>
+
+        <div id="reviewLoginPrompt" style="display:none">
+          <p>Sign in to leave a review.</p>
+          <button id="reviewLoginPromptBtn">Sign In</button>
+        </div>
+
+        <div id="reviewForm" style="display:none">
+          <div class="review-write-head">
+            <h5>Write a Review</h5>
+            <p class="review-write-hint">Tell other coffee lovers what you think.</p>
+          </div>
+
+          <div class="rating-field">
+            <span class="rating-label">Your rating</span>
+            <div class="star-picker" id="starPicker" role="radiogroup" aria-label="Rate this product">
+              <button type="button" class="star-btn" data-rating="1" aria-label="1 star" role="radio" aria-checked="false">★</button>
+              <button type="button" class="star-btn" data-rating="2" aria-label="2 stars" role="radio" aria-checked="false">★</button>
+              <button type="button" class="star-btn" data-rating="3" aria-label="3 stars" role="radio" aria-checked="false">★</button>
+              <button type="button" class="star-btn" data-rating="4" aria-label="4 stars" role="radio" aria-checked="false">★</button>
+              <button type="button" class="star-btn" data-rating="5" aria-label="5 stars" role="radio" aria-checked="false">★</button>
+              <span class="rating-text" id="ratingText">Tap a star to rate</span>
+            </div>
+            <input type="hidden" id="reviewRating" value="0">
+          </div>
+
+          <div class="comment-field">
+            <label for="reviewText" class="rating-label">Your comment</label>
+            <textarea id="reviewText" placeholder="What did you love? How did you brew it? Any tips for fellow drinkers?" maxlength="500"></textarea>
+            <div class="char-counter"><span id="charCount">0</span> / 500</div>
+          </div>
+
+          <button class="btn btn-primary" id="submitReviewBtn" disabled>Submit Review</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SIZE GUIDE MODAL -->
+<div class="modal" id="sizeGuideModal">
+  <div class="modal-inner" style="max-width:640px;grid-template-columns:1fr">
+    <button class="icon-btn modal-close" id="sizeGuideClose">✕</button>
+    <div style="padding:40px">
+      <h2 style="font-family:var(--serif);margin-bottom:8px">Size Guide</h2>
+      <p style="color:var(--mute);font-size:12px;margin-bottom:24px">A quick guide to our bag weights and cup sizes.</p>
+      <table class="size-table">
+        <thead><tr><th>Size</th><th>Use case</th><th>Approx. servings</th></tr></thead>
+        <tbody>
+          <tr><td>250g</td><td>Whole bean / ground bags</td><td>~15 cups</td></tr>
+          <tr><td>500g</td><td>Whole bean / ground bags</td><td>~30 cups</td></tr>
+          <tr><td>1kg</td><td>Whole bean / ground bags</td><td>~60 cups</td></tr>
+          <tr><td>12oz</td><td>Mugs</td><td>Single serving</td></tr>
+          <tr><td>16oz</td><td>Mugs / tumblers</td><td>Single serving</td></tr>
+          <tr><td>20oz</td><td>Tumblers</td><td>Extra-large serving</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:11px;color:var(--mute);margin-top:16px">OS = One Size fits most. Pastries are baked fresh — box counts may vary slightly.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal checkout" id="checkoutModal">
+  <div class="modal-inner checkout-inner">
+    <button class="icon-btn modal-close" id="checkoutClose">✕</button>
+    <div class="checkout-form">
+      <h2>Checkout</h2>
+      <div class="eyebrow">Shipping Details</div>
+      <div class="form-grid">
+        <input id="coName" placeholder="Full name" required>
+        <input id="coEmail" placeholder="Email" type="email" required>
+        <input id="coPhone" placeholder="Phone" required>
+        <input id="coCity" placeholder="City" required>
+        <input id="coAddress" class="full" placeholder="Complete Address (Street, Barangay)" required>
+        <input id="coPostal" placeholder="Postal Code" required>
+        <input id="coCountry" placeholder="Country" value="Philippines" required>
+        <textarea id="coNotes" class="full" placeholder="Order notes (optional)" style="padding:14px 16px;background:transparent;border:1px solid var(--line-2);border-radius:2px;color:inherit;min-height:64px;resize:vertical;font:inherit"></textarea>
+      </div>
+      <div class="eyebrow" style="margin-top:16px">Payment Method</div>
+      <div class="pay-grid">
+        <label><input type="radio" name="disabled" disabled>GCash <span style="color:var(--mute);font-size:10px">(coming soon)</span></label>
+        <label><input type="radio" name="disabled" disabled>PayPal <span style="color:var(--mute);font-size:10px">(coming soon)</span></label>
+        <label><input type="radio" name="disabled" disabled>Bank Transfer <span style="color:var(--mute);font-size:10px">(coming soon)</span></label>
+        <label><input type="radio" name="pay" value="Cash on Delivery" checked>Cash on Delivery</label>
+      </div>
+    </div>
+    <div class="checkout-summary">
+      <h3>Order Summary</h3>
+      <div id="checkoutItems"></div>
+      <div class="checkout-vat-box">
+        <div class="row muted"><span>VATable sales</span><span id="checkoutVatable">₱0</span></div>
+        <div class="row muted"><span>VAT 12% (PH)</span><span id="checkoutVat">₱0</span></div>
+      </div>
+      <div class="row total"><span>Total (incl. VAT)</span><span id="checkoutTotal">₱0</span></div>
+      <button class="btn btn-primary block" id="placeOrder">Place Order</button>
+      <p class="muted xs" style="margin-top:8px;font-size:11px">Secure checkout. Earn loyalty points on this order.</p>
+    </div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal auth" id="authModal">
+  <div class="modal-inner auth-inner">
+    <button class="icon-btn modal-close" id="authClose">✕</button>
+    <h2 id="authTitle">Sign In</h2>
+    <p style="font-size:12px;color:var(--mute);margin-bottom:16px">Sign in to purchase, track orders, and earn loyalty points.</p>
+
+    <form id="signinForm" class="form-grid auth-form">
+      <input class="full" type="email" id="siEmail" placeholder="Email address" required autocomplete="email">
+      <input class="full" type="password" id="siPass" placeholder="Password" required minlength="6" autocomplete="current-password">
+      <button class="btn btn-primary full" type="submit">Sign In</button>
+    </form>
+
+    <form id="signupForm" class="form-grid auth-form" style="display:none">
+      <input class="full" type="text" id="suUser" placeholder="Username" required autocomplete="username">
+      <input class="full" type="email" id="suEmail" placeholder="Email address" required autocomplete="email">
+      <input class="full" type="tel" id="suPhone" placeholder="Phone number" required>
+      <input class="full" type="password" id="suPass" placeholder="Password (min 6 chars)" required minlength="6" autocomplete="new-password">
+      <input class="full" type="password" id="suConfirm" placeholder="Confirm password" required minlength="6">
+      <button class="btn btn-primary full" type="submit">Create Account</button>
+    </form>
+
+    <button class="btn btn-ghost full" id="googleBtn" style="margin-top:10px">Continue with Google</button>
+    <p class="auth-switch">New here? <a href="#" id="toggleAuth">Create an account</a></p>
+    <p class="muted xs" id="authMsg" style="text-align:center;margin-top:8px;color:#ff7a7a"></p>
+  </div>
+</div>
+
+<!-- CAPTCHA MODAL -->
+<div class="modal captcha-modal" id="captchaModal">
+  <div class="modal-inner captcha-modal-inner">
+    <button class="icon-btn modal-close" id="captchaClose" type="button">✕</button>
+    <h3 class="captcha-title">Verify you're human</h3>
+    <p class="captcha-sub">Type the code shown below to continue.</p>
+    <div id="captchaHost"></div>
+    <p class="captcha-error" id="captchaError"></p>
+    <button class="btn btn-primary block" id="captchaVerify" type="button">Verify</button>
+  </div>
+</div>
+
+<!-- SUPPORT WIDGET -->
+<div id="supportWidget" class="support-widget">
+  <button class="support-fab" id="supportFab" title="Support">
+    <span class="fab-icon fab-chat">Chat</span>
+    <span class="fab-icon fab-close" style="display:none">×</span>
+  </button>
+  <div class="support-panel" id="supportPanel">
+    <div class="support-header">
+      <span class="eyebrow">Maple's Bean</span>
+      <h3>Support Center</h3>
+      <p>We're online — typical reply in minutes.</p>
+    </div>
+    <div class="support-tabs">
+      <button class="sup-tab active" data-tab="chat">Chat</button>
+      <button class="sup-tab" data-tab="voice">Voice</button>
+    </div>
+
+    <!-- CHAT TAB -->
+    <div class="sup-content" id="tabChat">
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg agent">
+          <div class="chat-bubble">Hi! Welcome to Maple's Bean support. How can we help you today?</div>
+          <div class="chat-time">Now</div>
+        </div>
+      </div>
+      <div id="agentTypingIndicator">
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+        <span class="typing-dot"></span>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chatInput" placeholder="Type a message…" />
+        <button id="chatSend">Send</button>
+      </div>
+    </div>
+
+    <!-- VOICE TAB -->
+    <div class="sup-content" id="tabVoice" style="display:none">
+      <div class="voice-status" id="voiceStatus">
+        <div class="voice-avatar">Headset</div>
+        <p id="voiceStatusText">Ready to connect</p>
+        <p class="muted" style="font-size:11px;margin-top:4px">WebRTC secure voice call — no login required</p>
+      </div>
+      <div class="voice-controls">
+        <button class="btn btn-primary" id="voiceCallBtn" style="width:100%">Call Support</button>
+        <button class="btn btn-ghost" id="voiceHangBtn" style="width:100%;display:none">End Call</button>
+        <button class="btn btn-ghost" id="voiceMuteBtn" style="width:100%;display:none">Mute</button>
+      </div>
+      <div id="voiceWaveform" class="voice-waveform" style="display:none">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- USER PROFILE PANEL -->
+<div class="modal" id="profileModal">
+  <div class="modal-inner profile-inner">
+    <button class="icon-btn modal-close" id="profileClose">✕</button>
+    <div class="profile-sidebar">
+      <div class="profile-avatar" id="profileAvatar">◔</div>
+      <h3 id="profileName">Guest</h3>
+      <p id="profileEmail" class="muted" style="font-size:12px"></p>
+      <div class="loyalty-badge"><span class="lb-num" id="loyaltyPoints">0</span> Loyalty Points</div>
+      <div class="profile-nav">
+        <button class="pnav active" data-pane="orders">Track Delivery</button>
+        <button class="pnav" data-pane="details">Account Details</button>
+        <button class="pnav" data-pane="security">Security</button>
+        <button class="pnav pnav-seller" data-pane="seller" id="sellerNavBtn" style="display:none">Seller Panel</button>
+        <!-- Staff / Admin / Super Admin work on their own full pages, not in this window -->
+        <a class="pnav pnav-dashboard" id="dashboardLink" href="#" style="display:none">Dashboard ↗</a>
+        <button class="pnav" id="signoutBtn" style="margin-top:auto">Sign Out</button>
+      </div>
+    </div>
+    <div class="profile-content">
+      <!-- ORDERS -->
+      <div class="pane active" id="paneOrders">
+        <h2 class="pane-title">Track Your Delivery</h2>
+        <p class="pane-lead muted">Follow buyer shipments — courier, tracking number, and delivery status (Firebase live).</p>
+        <div id="ordersList"><p class="muted">No orders yet.</p></div>
+      </div>
+      <!-- ACCOUNT DETAILS -->
+      <div class="pane" id="paneDetails">
+        <h2 style="font-family:var(--serif);margin-bottom:24px">Account Details</h2>
+        <div class="form-grid">
+          <input id="detUser" placeholder="Username">
+          <input id="detPhone" placeholder="Phone number" type="tel">
+          <input id="detEmail" class="full" placeholder="Email" type="email" disabled>
+          <button class="btn btn-primary full" id="saveDetails">Save Changes</button>
+        </div>
+      </div>
+      <!-- SECURITY -->
+      <div class="pane" id="paneSecurity">
+        <h2 style="font-family:var(--serif);margin-bottom:24px">Security</h2>
+        <div class="first-login-banner" id="pwFirstLoginBanner" style="display:none">
+          <p>Welcome! For your account's safety, would you like to update your password now?</p>
+          <div class="first-login-banner-actions">
+            <button class="btn btn-primary" id="pwPromptUpdateBtn">Yes, update it</button>
+            <button class="btn btn-ghost" id="pwPromptDismissBtn">Not now</button>
+          </div>
+        </div>
+        <div class="form-grid">
+          <input class="full" type="password" id="secOld" placeholder="Current password">
+          <input class="full" type="password" id="secNew" placeholder="New password (min 6)">
+          <input class="full" type="password" id="secConfirm" placeholder="Confirm new password">
+          <button type="button" class="btn btn-primary full" id="changePassBtn">Update Password</button>
+        </div>
+        <div style="margin-top:24px;padding-top:24px;border-top:1px solid var(--line)">
+          <p class="muted" style="margin-bottom:12px;font-size:12px">Danger Zone</p>
+          <button class="btn btn-ghost" id="deleteAccBtn" style="border-color:#ff7a7a;color:#ff7a7a">Delete Account</button>
+        </div>
+      </div>
+      <!-- SELLER PANEL -->
+      <div class="pane" id="paneSeller">
+        <h2 style="font-family:var(--serif);margin-bottom:8px">Seller Panel</h2>
+        <div id="sellerNotApproved" style="display:none;padding:20px;border:1px solid var(--line);border-radius:4px;text-align:center">
+          <p class="muted">Your seller application is pending admin approval.</p>
+        </div>
+        <div id="sellerApproved">
+          <div class="admin-tabs">
+            <button class="stab active" data-stab="my-products">My Products</button>
+            <button class="stab" data-stab="my-orders">My Orders</button>
+            <button class="stab" data-stab="my-stats">My Stats</button>
+          </div>
+          <div class="stab-content" id="stabMyProducts">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+              <h4 style="font-size:12px;letter-spacing:.3em;text-transform:uppercase;color:var(--mute)">My Listings</h4>
+              <button class="btn btn-primary" id="sellerAddProduct" style="padding:10px 18px;font-size:10px">+ Add Listing</button>
+            </div>
+            <div id="sellerProductsList"></div>
+          </div>
+          <div class="stab-content" id="stabMyOrders" style="display:none">
+            <div id="sellerOrdersList"></div>
+          </div>
+          <div class="stab-content" id="stabMyStats" style="display:none">
+            <div class="stats-grid">
+              <div class="stat-card"><span class="stat-val" id="sellerRevStat">₱0</span><span class="stat-label">My Revenue</span></div>
+              <div class="stat-card"><span class="stat-val" id="sellerOrdStat">0</span><span class="stat-label">My Orders</span></div>
+              <div class="stat-card"><span class="stat-val" id="sellerProdStat">0</span><span class="stat-label">My Products</span></div>
+            </div>
+          </div>
+        </div>
+        <div id="sellerApplySection" style="display:none;margin-top:24px">
+          <p style="color:var(--mute);font-size:13px;margin-bottom:12px">Want to sell on Maple's Bean?</p>
+          <button class="btn btn-primary" id="applySellerBtn">Apply to Become a Seller</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT FORM MODAL (Seller listings) -->
+<div class="modal" id="productFormModal">
+  <div class="modal-inner product-form-modal">
+    <button class="icon-btn modal-close" id="prodFormClose">✕</button>
+    <div class="product-form-body">
+      <h2 class="pane-title" id="prodFormTitle">Add Product</h2>
+      <p class="pane-lead muted">Saved to Firebase · PHP backup syncs automatically.</p>
+      <div class="form-section-label">PRODUCT &amp; INVENTORY</div>
+      <div class="form-grid">
+        <input class="full" id="pfName" placeholder="Product name" required>
+        <select id="pfCategory" class="admin-input">
+          <option value="new">New</option>
+          <option value="beans">Coffee Beans</option>
+          <option value="pastries">Pastries</option>
+          <option value="drinkware">Drinkware</option>
+          <option value="merch">Merch</option>
+        </select>
+        <input id="pfStock" type="number" min="0" placeholder="Opening stock quantity">
+        <input id="pfInventoryLoc" placeholder="Inventory location" value="Main warehouse">
+        <input id="pfReorder" type="number" min="0" placeholder="Reorder level" value="5">
+        <input id="pfSupplier" placeholder="Supplier / vendor name">
+        <input id="pfSupplierSku" placeholder="Supplier SKU / item code">
+        <input id="pfSupplierContact" placeholder="Supplier contact (phone/email)">
+      </div>
+      <div class="form-section-label">DELIVERY &amp; RECEIVING</div>
+      <div class="form-grid">
+        <select id="pfDeliveryStatus" class="admin-input">
+          <option value="ready">Ready / stocked</option>
+          <option value="ordered">Ordered from supplier</option>
+          <option value="in_transit">In transit</option>
+          <option value="pending">Pending receiving</option>
+        </select>
+        <input id="pfDeliveryLead" type="number" min="0" placeholder="Supplier lead time (days)" value="3">
+        <input id="pfDeliveryDate" type="date" placeholder="Expected delivery">
+      </div>
+      <div class="vat-form-panel">
+        <h4 class="admin-section-title">Philippines VAT (BIR)</h4>
+        <div class="form-grid">
+          <input id="pfPrice" type="number" step="0.01" placeholder="Selling price (₱)" required>
+          <select id="pfVatInclusive" class="admin-input">
+            <option value="inclusive">Price VAT-inclusive (typical retail)</option>
+            <option value="exclusive">Price VAT-exclusive</option>
+          </select>
+          <select id="pfVatType" class="admin-input">
+            <option value="standard">Standard rated — 12%</option>
+            <option value="zero">Zero-rated</option>
+            <option value="exempt">VAT Exempt</option>
+          </select>
+          <input id="pfVatRate" type="number" step="0.01" value="12" placeholder="VAT rate %">
+          <input id="pfOldPrice" type="number" placeholder="Old price (optional)">
+        </div>
+        <div id="pfVatPreview" class="vat-preview"></div>
+      </div>
+      <div class="form-grid" style="margin-top:16px">
+        <input id="pfSizes" placeholder="Sizes (250g,500g,1kg)">
+        <input id="pfColors" placeholder="Colors (#000,#fff)">
+        <input class="full" id="pfImages" placeholder="Image URLs (comma-separated)">
+        <textarea class="full" id="pfDesc" placeholder="Description" rows="3"></textarea>
+        <label class="check-row"><input type="checkbox" id="pfFeatured"> Featured</label>
+        <label class="check-row"><input type="checkbox" id="pfSale"> On Sale</label>
+        <button class="btn btn-primary full" id="pfSave">Save to Firebase</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- BACK TO TOP -->
+<button id="backToTop" aria-label="Back to top">↑</button>
+
+<!-- THEME TOGGLE -->
+<button id="themeToggle" aria-label="Toggle theme">Light</button>
+
+<!-- HIDDEN AUDIO (WebRTC) -->
+<audio id="remoteAudio" autoplay></audio>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="shared.js"></script>
+<script src="api-client.js"></script>
+<script src="script.js"></script>
+
+<div id="passwordConfirmOverlay" class="password-confirm-overlay" aria-hidden="true">
+  <div class="password-confirm-card" role="dialog" aria-modal="true" aria-labelledby="passwordConfirmTitle">
+    <div class="password-confirm-eyebrow">Account security</div>
+    <h3 id="passwordConfirmTitle">Are you sure you want to change your password?</h3>
+    <p>Choose Yes to update your password and sign out. Choose No to keep your current password and stay signed in.</p>
+    <div class="password-confirm-actions">
+      <button type="button" class="cancel" id="passwordConfirmCancel">No</button>
+      <button type="button" class="confirm" id="passwordConfirmOk">Yes</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const overlay=document.getElementById('passwordConfirmOverlay');
+  const updateBtn=document.getElementById('changePassBtn');
+  const cancel=document.getElementById('passwordConfirmCancel');
+  const yes=document.getElementById('passwordConfirmOk');
+  if(!overlay || !updateBtn || !cancel || !yes) return;
+
+  function openConfirm(){
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+    setTimeout(()=>yes.focus(),0);
+  }
+  function closeConfirm(){
+    overlay.classList.remove('is-open');
+    overlay.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+
+  // IMPORTANT: this is the only confirmation gate. The Update Password
+  // button itself never changes the password directly.
+  updateBtn.addEventListener('click',function(e){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    openConfirm();
+  },true);
+
+  cancel.addEventListener('click',function(e){
+    e.preventDefault();
+    closeConfirm();
+  });
+
+  overlay.addEventListener('click',function(e){
+    if(e.target===overlay) closeConfirm();
+  });
+
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape' && overlay.classList.contains('is-open')) closeConfirm();
+  });
+
+  yes.addEventListener('click',async function(e){
+    e.preventDefault();
+    closeConfirm();
+    // Only after YES do we call the real password update function.
+    await changePassword();
+  });
+})();
+</script>
+<script>
+/* Accessible show/hide controls for all password fields. */
+(function () {
+  document.querySelectorAll('input[type="password"]').forEach(function (input) {
+    if (input.dataset.showPasswordReady) return;
+    input.dataset.showPasswordReady = '1';
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative;width:100%;';
+    if (input.classList.contains('full')) { wrap.className = 'full'; }
+    input.parentNode.insertBefore(wrap, input);
+    wrap.appendChild(input);
+    input.style.paddingRight = '76px';
+    var button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = 'Show';
+    button.setAttribute('aria-label', 'Show password');
+    button.setAttribute('aria-pressed', 'false');
+    button.style.cssText = 'position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:inherit;font:inherit;font-size:12px;font-weight:600;cursor:pointer;padding:6px 4px;z-index:2;';
+    button.addEventListener('click', function () {
+      var reveal = input.type === 'password';
+      input.type = reveal ? 'text' : 'password';
+      button.textContent = reveal ? 'Hide' : 'Show';
+      button.setAttribute('aria-label', reveal ? 'Hide password' : 'Show password');
+      button.setAttribute('aria-pressed', reveal ? 'true' : 'false');
+    });
+    wrap.appendChild(button);
+  });
+})();
+</script>
+</body>
+</html>

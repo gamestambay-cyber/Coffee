@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<script>
+/* Production console quiet mode: suppress application and Firebase console output. */
+(function () {
+  var noop = function () {};
+  ['log', 'info', 'warn', 'error', 'debug', 'trace', 'table', 'group',
+   'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'timeLog', 'count',
+   'countReset', 'assert', 'dir', 'dirxml', 'profile', 'profileEnd'].forEach(function (method) {
+    try { console[method] = noop; } catch (_) {}
+  });
+  /* Prevent uncaught page errors/rejections from being echoed by the browser console. */
+  window.addEventListener('error', function (event) { event.preventDefault(); }, true);
+  window.addEventListener('unhandledrejection', function (event) { event.preventDefault(); });
+})();
+</script>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#16120f">
+<title>Maple's Bean — Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sales-inventory.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.php"><span>MB</span><b>MAPLE'S BEAN</b></a>
+  <div class="top-actions">
+    <span id="roleBadge" class="status-chip">VERIFYING ACCESS</span>
+    <button id="refreshBtn" class="icon-btn" title="Refresh">↻</button>
+    <button id="logoutBtn" class="ghost-btn">Sign out</button>
+  </div>
+</header>
+
+<div id="toast" class="toast" role="status"></div>
+<div id="modal" class="modal hidden"><div class="modal-card"><button class="modal-close" onclick="closeModal()">×</button><div id="modalBody"></div></div></div>
+
+<section id="denied" class="denied hidden">
+  <div class="denied-card">
+    <div class="mark">MB</div><p class="eyebrow">SECURE WORKSPACE</p>
+    <h1>Access restricted</h1>
+    <p id="deniedMsg">Your account does not have operations permissions.</p>
+    <button id="retryBtn" class="primary-btn">Try again</button>
+  </div>
+</section>
+
+<div id="app" class="layout hidden">
+  <aside class="sidebar">
+    <div class="side-title">OPERATIONS</div>
+    <nav>
+      <a class="nav-link active" href="#overview">Overview</a>
+      <a class="nav-link" href="#pos">Point of Sale</a>
+      <a class="nav-link" href="#inventory">Inventory</a>
+      <a class="nav-link" href="#sales">Sales</a>
+      <a class="nav-link admin-only hidden" href="#catalog">Catalog</a>
+      <a class="nav-link admin-only hidden" href="#team">Team</a>
+    </nav>
+    <div class="side-card">
+      <span class="eyebrow">SHIFT</span>
+      <strong id="clock">—</strong>
+      <small id="shiftRole">—</small>
+    </div>
+    <div class="side-card">
+      <span class="eyebrow">STOCK SEARCH</span>
+      <input id="inventorySearch" placeholder="Search products">
+    </div>
+  </aside>
+
+  <main class="main">
+    <section id="overview" class="hero">
+      <div>
+        <span class="eyebrow">MAPLE'S BEAN / OPERATIONS</span>
+        <h1>Sales, stock &amp;<br><em>store control.</em></h1>
+        <p>A polished workspace for daily transactions, inventory accuracy and business visibility.</p>
+      </div>
+      <div class="hero-date" id="todayLabel">—</div>
+    </section>
+
+    <section class="metrics">
+      <article><span>Today's sales</span><strong id="todayRevenue">₱0.00</strong><small id="todayOrders">0 transactions</small></article>
+      <article><span>Total revenue</span><strong id="revenue">₱0.00</strong><small>All completed sales</small></article>
+      <article><span>Products</span><strong id="products">0</strong><small>Catalog items</small></article>
+      <article><span>Low stock</span><strong id="lowStock">0</strong><small id="outStock">0 out of stock</small></article>
+    </section>
+
+    <section id="pos" class="section-block">
+      <div class="section-head"><div><span class="eyebrow">CHECKOUT</span><h2>Point of Sale</h2></div><span class="section-note">Walk-in transaction</span></div>
+      <div class="pos">
+        <div class="pos-products">
+          <input id="posSearch" class="search" placeholder="Find a product…">
+          <div id="posGrid" class="pos-grid"></div>
+        </div>
+        <div class="receipt">
+          <div class="receipt-head"><span>NEW SALE</span><b id="receiptCount">0 items</b></div>
+          <div id="receiptItems" class="receipt-items"><div class="empty">Select products to start.</div></div>
+          <div class="totals">
+            <label>Subtotal <b id="posSubtotal">₱0.00</b></label>
+            <label>Discount <input id="posDiscount" type="number" min="0" step="0.01" value="0"></label>
+            <label>Tax <input id="posTax" type="number" min="0" step="0.01" value="0"></label>
+            <div class="grand"><span>Total</span><strong id="posTotal">₱0.00</strong></div>
+          </div>
+          <div class="checkout-fields">
+            <input id="customerName" placeholder="Customer name (optional)">
+            <select id="payMethod"><option>Cash</option><option>GCash</option><option>Bank transfer</option></select>
+          </div>
+          <button id="completeSale" class="primary-btn full">Complete sale</button>
+          <button id="clearSale" class="ghost-btn full">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="inventory" class="section-block">
+      <div class="section-head"><div><span class="eyebrow">STOCK CONTROL</span><h2>Inventory</h2></div><span class="section-note">Live local stock</span></div>
+      <div class="table-wrap"><div id="inventoryTable"></div></div>
+    </section>
+
+    <section id="sales" class="section-block">
+      <div class="section-head"><div><span class="eyebrow">TRANSACTIONS</span><h2>Sales history</h2></div>
+        <div class="filters"><input id="salesSearch" class="search compact" placeholder="Search order…"><select id="salesFilter"><option value="all">All channels</option><option value="POS">POS</option><option value="web">Online</option></select></div>
+      </div>
+      <div class="table-wrap"><div id="salesTable"></div></div>
+    </section>
+
+    <section id="catalog" class="section-block admin-only hidden">
+      <div class="section-head"><div><span class="eyebrow">MERCHANDISING</span><h2>Catalog</h2></div><button id="newProductBtn" class="primary-btn">+ New product</button></div>
+      <div class="table-wrap"><div id="catalogTable"></div></div>
+    </section>
+
+    <section id="team" class="section-block admin-only hidden">
+      <div class="section-head"><div><span class="eyebrow">ACCESS</span><h2>Team &amp; roles</h2></div></div>
+      <div class="table-wrap"><div id="rolesTable"></div></div>
+    </section>
+  </main>
+
+  <aside class="rightbar">
+    <div class="insight-card">
+      <span class="eyebrow">ATTENTION</span><h3>Stock watch</h3><div id="alertsList"></div>
+    </div>
+    <div class="insight-card">
+      <span class="eyebrow">RECENT</span><h3>Latest sales</h3><div id="feedList"></div>
+    </div>
+    <div class="insight-card">
+      <span class="eyebrow">WORKSPACE</span><div class="status-line"><span>Data source</span><b>Local server</b></div><div class="status-line"><span>Last refresh</span><b id="lastSync">—</b></div>
+      <button id="refreshBtn2" class="outline-btn full">Refresh</button>
+    </div>
+  </aside>
+</div>
+<script src="sales-inventory.js"></script>
+</body>
+</html>

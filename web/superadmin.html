@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+/* Production console quiet mode: suppress application and Firebase console output. */
+(function () {
+  var noop = function () {};
+  ['log', 'info', 'warn', 'error', 'debug', 'trace', 'table', 'group',
+   'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'timeLog', 'count',
+   'countReset', 'assert', 'dir', 'dirxml', 'profile', 'profileEnd'].forEach(function (method) {
+    try { console[method] = noop; } catch (_) {}
+  });
+  /* Prevent uncaught page errors/rejections from being echoed by the browser console. */
+  window.addEventListener('error', function (event) { event.preventDefault(); }, true);
+  window.addEventListener('unhandledrejection', function (event) { event.preventDefault(); });
+})();
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Maple's Bean — Super Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body data-dash="superadmin" data-allow="superadmin">
+
+<div id="dashBoot" class="dash-boot">Verifying access…</div>
+
+<div id="dashDenied" class="dash-denied" hidden>
+  <div class="denied-card">
+    <h1>Access restricted</h1>
+    <p data-denied-msg>You do not have access to this page.</p>
+    <a class="btn btn-primary" data-denied-link href="index.html">Back to the shop</a>
+  </div>
+</div>
+
+<div id="dashApp" class="dash" hidden>
+  <aside class="dash-side">
+    <div class="brand">Maple's Bean</div>
+    <span class="role-chip superadmin">Super Admin</span>
+    <nav class="dash-nav">
+      <button type="button" data-view="overview">Overview</button>
+      <button type="button" data-view="users">Users &amp; Roles</button>
+      <button type="button" data-view="products">Products</button>
+      <button type="button" data-view="orders">Orders &amp; Delivery</button>
+      <button type="button" data-view="inventory">Inventory</button>
+      <button type="button" data-view="sellers">Sellers</button>
+      <button type="button" data-view="support">Chat Support</button>
+      <button type="button" data-view="refunds">Refund Reports</button>
+      <button type="button" data-view="audit">Audit Trail</button>
+      <button type="button" data-view="pos">Point of Sale</button>
+      <button type="button" data-view="sales">Sales History</button>
+    </nav>
+    <div class="dash-side-foot">
+      <a href="index.html">← Back to shop</a>
+      <button type="button" data-act="signout" style="text-align:left;padding:11px 14px;border-radius:8px;font-size:13px;color:rgba(239,228,207,.72)">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <header class="dash-top">
+      <h1 id="viewTitle">Overview</h1>
+      <div style="display:flex;align-items:center;gap:16px">
+        <button class="btn btn-ghost" data-act="refresh">↻ Refresh</button>
+        <div class="who"><strong id="whoName"></strong><br><span id="whoEmail"></span></div>
+      </div>
+    </header>
+
+    <section class="view" id="view-overview" hidden>
+      <div class="stats-grid">
+        <div class="stat-card "><span class="stat-val" id="statRevenue">0</span><span class="stat-label">Total revenue</span></div><div class="stat-card "><span class="stat-val" id="statOrders">0</span><span class="stat-label">Total orders</span></div><div class="stat-card "><span class="stat-val" id="statUsers">0</span><span class="stat-label">Registered users</span></div><div class="stat-card "><span class="stat-val" id="statProducts">0</span><span class="stat-label">Active products</span></div><div class="stat-card "><span class="stat-val" id="statSellers">0</span><span class="stat-label">Sellers</span></div><div class="stat-card "><span class="stat-val" id="statChats">0</span><span class="stat-label">Support tickets</span></div>
+      </div>
+      <div class="panel"><h3>Recent orders</h3><div id="recentOrdersList"></div></div>
+    </section>
+
+    <section class="view" id="view-users" hidden>
+      <div class="sa-card" id="superAdminCard"></div>
+      <p class="view-lead">You can make someone an <strong>admin</strong>, <strong>staff</strong>, <strong>seller</strong> or <strong>customer</strong>. There is no option to create another super admin.</p>
+      <input id="userSearch" class="search" placeholder="Search by name or email…" style="max-width:340px;margin-bottom:14px">
+      <div id="allUsersList"></div>
+    </section>
+
+    <section class="view" id="view-products" hidden>
+      <div id="productListWrap">
+        <div class="section-head">
+          <p class="view-lead" style="margin:0">Stock quantities are managed under <strong>Inventory</strong>, not here.</p>
+          <button class="btn btn-primary" data-act="product-new">+ Add product</button>
+        </div>
+        <div id="adminProductsList"></div>
+      </div>
+
+      <!-- Add / edit product: an inline page section, not a pop-up -->
+      <div id="productEditor" class="editor" hidden>
+        <h2 id="prodFormTitle">Add Product</h2>
+        <p class="muted" style="font-size:13px">Saved straight to Firebase.</p>
+        <div class="form-section-label">Product &amp; inventory</div>
+        <div class="form-grid">
+          <input class="full" id="pfName" placeholder="Product name">
+          <select id="pfCategory">
+            <option value="new">New</option><option value="beans">Coffee Beans</option>
+            <option value="pastries">Pastries</option><option value="drinkware">Drinkware</option><option value="merch">Merch</option>
+          </select>
+          <input id="pfStock" type="number" min="0" placeholder="Opening stock quantity">
+          <input id="pfInventoryLoc" placeholder="Inventory location" value="Main warehouse">
+          <input id="pfReorder" type="number" min="0" placeholder="Reorder level" value="5">
+          <input id="pfSupplier" placeholder="Supplier / vendor name">
+          <input id="pfSupplierSku" placeholder="Supplier SKU / item code">
+          <input id="pfSupplierContact" placeholder="Supplier contact (phone/email)">
+        </div>
+        <div class="form-section-label">Delivery &amp; receiving</div>
+        <div class="form-grid">
+          <select id="pfDeliveryStatus">
+            <option value="ready">Ready / stocked</option><option value="ordered">Ordered from supplier</option>
+            <option value="in_transit">In transit</option><option value="pending">Pending receiving</option>
+          </select>
+          <input id="pfDeliveryLead" type="number" min="0" placeholder="Supplier lead time (days)" value="3">
+          <input id="pfDeliveryDate" type="date">
+        </div>
+        <div class="vat-form-panel">
+          <div class="form-section-label" style="margin-top:0">Philippines VAT (BIR)</div>
+          <div class="form-grid">
+            <input id="pfPrice" type="number" step="0.01" placeholder="Selling price (₱)">
+            <select id="pfVatInclusive"><option value="inclusive">Price VAT-inclusive (typical retail)</option><option value="exclusive">Price VAT-exclusive</option></select>
+            <select id="pfVatType"><option value="standard">Standard rated — 12%</option><option value="zero">Zero-rated</option><option value="exempt">VAT Exempt</option></select>
+            <input id="pfVatRate" type="number" step="0.01" value="12" placeholder="VAT rate %">
+            <input id="pfOldPrice" type="number" placeholder="Old price (optional)">
+          </div>
+          <div id="pfVatPreview" class="vat-preview"></div>
+        </div>
+        <div class="form-grid" style="margin-top:16px">
+          <input id="pfSizes" placeholder="Sizes (250g,500g,1kg)">
+          <input id="pfColors" placeholder="Colors (#000,#fff)">
+          <input class="full" id="pfImages" placeholder="Image URLs (comma-separated)">
+          <textarea class="full" id="pfDesc" placeholder="Description" rows="3"></textarea>
+          <label class="check-row"><input type="checkbox" id="pfFeatured"> Featured</label>
+          <label class="check-row"><input type="checkbox" id="pfSale"> On sale</label>
+        </div>
+        <div class="editor-actions">
+          <button class="btn btn-primary" data-act="product-save">Save product</button>
+          <button class="btn btn-ghost" data-act="product-cancel">Cancel</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-orders" hidden>
+      <p class="view-lead"><span id="deliveryPendingCount">0</span> orders awaiting delivery. Click an order to open tracking details.</p>
+      <div id="allOrdersList"></div>
+    </section>
+
+    <section class="view" id="view-inventory" hidden>
+      <div class="stats-grid">
+        <div class="stat-card "><span class="stat-val" id="invTotalSku">0</span><span class="stat-label">Total SKUs</span></div><div class="stat-card "><span class="stat-val" id="invInStock">0</span><span class="stat-label">In stock</span></div><div class="stat-card warn"><span class="stat-val" id="invLowStock">0</span><span class="stat-label">Low stock (&lt;5)</span></div><div class="stat-card bad"><span class="stat-val" id="invSoldOut">0</span><span class="stat-label">Sold out</span></div>
+      </div>
+      <div class="section-head">
+        <h3 class="section-title">Stock levels</h3>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" data-act="inv-refresh">↻ Refresh</button>
+          <button class="btn btn-primary" data-act="inv-save-all">Save all changes</button>
+        </div>
+      </div>
+      <div id="inventoryList"></div>
+    </section>
+
+    <section class="view" id="view-sellers" hidden>
+      <p class="view-lead">Review seller applications.</p>
+      <div id="sellersList"></div>
+    </section>
+
+    <section class="view" id="view-support" hidden>
+      <div id="adminCallStatus" class="call-box" hidden></div>
+      <div id="supportConvList"></div>
+      <div id="supportReplyArea" hidden style="margin-top:18px">
+        <h3 id="supportReplyTitle" class="section-title"></h3>
+        <div class="chat-messages" id="adminChatMessages"></div>
+        <div class="chat-input-row">
+          <input type="text" id="adminChatInput" placeholder="Reply to customer…">
+          <button class="btn btn-primary" data-act="reply-send">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-refunds" hidden>
+      <p class="view-lead">Refund report from Firebase orders. Mark an order as refunded only after the refund has actually been processed.</p>
+      <div id="refundReport"></div>
+    </section>
+    <section class="view" id="view-audit" hidden>
+      <p class="view-lead">Admin and staff actions recorded in Firebase Realtime Database.</p>
+      <div id="auditTrailList"></div>
+    </section>
+    <section class="view" id="view-sales" hidden>
+      <div class="section-head"><p class="view-lead" style="margin:0">Sales history and transactions.</p><input id="salesSearch" class="search" placeholder="Search sales…" style="max-width:300px"></div>
+      <div id="salesHistoryList"></div>
+    </section>
+
+    <section class="view" id="view-pos" hidden>
+      <div class="pos-layout">
+        <div>
+          <input type="text" id="posSearch" class="search" placeholder="Search products…">
+          <div class="pos-grid" id="posProductGrid"></div>
+        </div>
+        <div class="pos-receipt">
+          <h3 class="section-title">Current sale</h3>
+          <div id="posItems"></div>
+          <div class="pos-totals">
+            <div class="row"><span>Subtotal</span><span id="posSubtotal">₱0</span></div>
+            <div class="row muted"><span>VAT 12% (PH)</span><span id="posTax">₱0</span></div>
+            <div class="row total"><span>Total</span><span id="posTotal">₱0</span></div>
+          </div>
+          <select id="posPayMethod"><option>GCash</option><option>Cash</option><option>PayPal</option></select>
+          <button class="btn btn-primary block" data-act="pos-charge">Charge customer</button>
+          <button class="btn btn-ghost block" data-act="pos-clear" style="margin-top:8px">Clear</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<audio id="remoteAudio" autoplay></audio>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="shared.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

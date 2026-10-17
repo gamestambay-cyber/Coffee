@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+/* Production console quiet mode: suppress application and Firebase console output. */
+(function () {
+  var noop = function () {};
+  ['log', 'info', 'warn', 'error', 'debug', 'trace', 'table', 'group',
+   'groupCollapsed', 'groupEnd', 'time', 'timeEnd', 'timeLog', 'count',
+   'countReset', 'assert', 'dir', 'dirxml', 'profile', 'profileEnd'].forEach(function (method) {
+    try { console[method] = noop; } catch (_) {}
+  });
+  /* Prevent uncaught page errors/rejections from being echoed by the browser console. */
+  window.addEventListener('error', function (event) { event.preventDefault(); }, true);
+  window.addEventListener('unhandledrejection', function (event) { event.preventDefault(); });
+})();
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Maple's Bean — Staff Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body data-dash="staff" data-allow="staff">
+
+<div id="dashBoot" class="dash-boot">Verifying access…</div>
+
+<div id="dashDenied" class="dash-denied" hidden>
+  <div class="denied-card">
+    <h1>Access restricted</h1>
+    <p data-denied-msg>You do not have access to this page.</p>
+    <a class="btn btn-primary" data-denied-link href="index.html">Back to the shop</a>
+  </div>
+</div>
+
+<div id="dashApp" class="dash" hidden>
+  <aside class="dash-side">
+    <div class="brand">Maple's Bean</div>
+    <span class="role-chip staff">Staff</span>
+    <nav class="dash-nav">
+      <button type="button" data-view="overview">Overview</button>
+      <button type="button" data-view="pos">Point of Sale</button>
+      <button type="button" data-view="inventory">Inventory</button>
+      <button type="button" data-view="sales">Sales History</button>
+    </nav>
+    <div class="dash-side-foot">
+      <a href="index.html">← Back to shop</a>
+      <button type="button" data-act="signout" style="text-align:left;padding:11px 14px;border-radius:8px;font-size:13px;color:rgba(239,228,207,.72)">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <header class="dash-top">
+      <h1 id="viewTitle">Overview</h1>
+      <div style="display:flex;align-items:center;gap:16px">
+        <button class="btn btn-ghost" data-act="refresh">↻ Refresh</button>
+        <div class="who"><strong id="whoName"></strong><br><span id="whoEmail"></span></div>
+      </div>
+    </header>
+
+    <section class="view" id="view-overview" hidden>
+      <div class="stats-grid">
+        <div class="stat-card "><span class="stat-val" id="stToday">0</span><span class="stat-label">Today's sales</span></div><div class="stat-card "><span class="stat-val" id="stTodayOrders">0</span><span class="stat-label">Transactions today</span></div><div class="stat-card warn"><span class="stat-val" id="stLow">0</span><span class="stat-label">Low stock (&lt;5)</span></div><div class="stat-card bad"><span class="stat-val" id="stOut">0</span><span class="stat-label">Sold out</span></div>
+      </div>
+      <div class="panel">
+        <h3>Your shift</h3>
+        <p class="muted">Use <strong>Point of Sale</strong> for walk-in customers, <strong>Inventory</strong> to correct stock counts, and <strong>Sales History</strong> to look up a transaction.</p>
+      </div>
+    </section>
+
+    <section class="view" id="view-pos" hidden>
+      <div class="pos-layout">
+        <div>
+          <input type="text" id="posSearch" class="search" placeholder="Search products…">
+          <div class="pos-grid" id="posProductGrid"></div>
+        </div>
+        <div class="pos-receipt">
+          <h3 class="section-title">Current sale</h3>
+          <div id="posItems"></div>
+          <div class="pos-totals">
+            <div class="row"><span>Subtotal</span><span id="posSubtotal">₱0</span></div>
+            <div class="row muted"><span>VAT 12% (PH)</span><span id="posTax">₱0</span></div>
+            <div class="row total"><span>Total</span><span id="posTotal">₱0</span></div>
+          </div>
+          <select id="posPayMethod"><option>GCash</option><option>Cash</option><option>PayPal</option></select>
+          <button class="btn btn-primary block" data-act="pos-charge">Charge customer</button>
+          <button class="btn btn-ghost block" data-act="pos-clear" style="margin-top:8px">Clear</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-inventory" hidden>
+      <div class="stats-grid">
+        <div class="stat-card "><span class="stat-val" id="invTotalSku">0</span><span class="stat-label">Total SKUs</span></div><div class="stat-card "><span class="stat-val" id="invInStock">0</span><span class="stat-label">In stock</span></div><div class="stat-card warn"><span class="stat-val" id="invLowStock">0</span><span class="stat-label">Low stock (&lt;5)</span></div><div class="stat-card bad"><span class="stat-val" id="invSoldOut">0</span><span class="stat-label">Sold out</span></div>
+      </div>
+      <div class="section-head">
+        <h3 class="section-title">Stock levels</h3>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost" data-act="inv-refresh">↻ Refresh</button>
+          <button class="btn btn-primary" data-act="inv-save-all">Save all changes</button>
+        </div>
+      </div>
+      <div id="inventoryList"></div>
+    </section>
+
+    <section class="view" id="view-sales" hidden>
+      <div class="section-head">
+        <p class="view-lead" style="margin:0">Latest 200 transactions.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="salesSearch" class="search" placeholder="Search order or email…" style="width:220px">
+          <select id="salesFilter" class="admin-select" data-act="sales-filter"><option value="all">All channels</option><option value="POS">POS</option><option value="web">Online</option></select>
+        </div>
+      </div>
+      <div id="salesTable"></div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<audio id="remoteAudio" autoplay></audio>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="shared.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

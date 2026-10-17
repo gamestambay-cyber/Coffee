@@ -1,0 +1,145 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "system": {
+      "superAdmin": {
+        ".read": "auth != null",
+        ".write": "auth != null && !data.exists() && newData.child('uid').val() === auth.uid && root.child('users').child(auth.uid).child('role').val() === 'superadmin'"
+      }
+    },
+    "sessions": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "users": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin'))",
+        ".write": "auth != null && (auth.uid === $uid || (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')) && !(data.child('role').val() === 'superadmin' && root.child('system').child('superAdmin').child('uid').val() === $uid && !newData.exists())",
+        "role": {
+          ".validate": "newData.isString() && ((!data.exists() && newData.val() === 'customer') || newData.val() === data.val() || ($uid !== auth.uid && newData.val() !== 'superadmin' && !(data.val() === 'superadmin' && root.child('system').child('superAdmin').child('uid').val() === $uid) && (((root.child('system').child('superAdmin').child('uid').val() === auth.uid && root.child('users').child(auth.uid).child('role').val() === 'superadmin') && (newData.val() === 'customer' || newData.val() === 'staff' || newData.val() === 'seller' || newData.val() === 'admin')) || ((root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin') && data.val() !== 'admin' && data.val() !== 'superadmin' && (newData.val() === 'customer' || newData.val() === 'staff' || newData.val() === 'seller')))))"
+        }
+      }
+    },
+    "mb_products": {
+      ".read": true,
+      "$id": {
+        ".write": "auth != null && ((root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin') || (root.child('users').child(auth.uid).child('role').val() === 'seller' && (data.child('sellerUid').val() === auth.uid || (!data.exists() && newData.child('sellerUid').val() === auth.uid))))",
+        "stock": {
+          ".write": "auth != null",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        }
+      }
+    },
+    "orders": {
+      ".indexOn": [
+        "user",
+        "createdAt"
+      ],
+      ".read": "auth != null && ((root.child('users').child(auth.uid).child('role').val() === 'staff' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin') || root.child('users').child(auth.uid).child('role').val() === 'seller' || (query.orderByChild === 'user' && query.equalTo === auth.uid))",
+      "$id": {
+        ".read": "auth != null && (data.child('user').val() === auth.uid || (root.child('users').child(auth.uid).child('role').val() === 'staff' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin'))",
+        ".write": "auth != null && ((!data.exists() && newData.child('user').val() === auth.uid) || (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin'))"
+      }
+    },
+    "carts": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "reviews": {
+      ".read": true,
+      "$pid": {
+        ".write": "auth != null"
+      }
+    },
+    "sellers": {
+      ".read": "auth != null && ((root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin') || root.child('users').child(auth.uid).child('role').val() === 'seller')",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin'))",
+        ".write": "auth != null && ((root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin') || ($uid === auth.uid && !data.exists() && newData.child('approved').val() === false))"
+      }
+    },
+    "presence": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+    "support_convs": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      "$id": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "support_msgs": {
+      "$id": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "webrtc_calls": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      "$id": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "ingredients": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      "$id": {
+        "quantity": {
+          ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'staff' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+          ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'staff' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        }
+      }
+    },
+    "refunds": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')"
+    },
+    "auditTrail": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'staff' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".indexOn": [
+        "at"
+      ]
+    },
+    "suppliers": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')"
+    },
+    "stockLog": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'staff' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".indexOn": [
+        "at"
+      ]
+    },
+    "recipes": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'staff' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')"
+    },
+    "purchaseOrders": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".indexOn": [
+        "createdAt"
+      ]
+    },
+    "cashSessions": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'staff' || root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'superadmin')",
+      ".indexOn": [
+        "at"
+      ]
+    }
+  }
+}
