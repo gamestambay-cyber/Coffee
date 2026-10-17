@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Maple's Bean — Database Editor</title>
+<style>
+:root{--bg:#1b1511;--panel:#251d17;--line:#3a2e25;--text:#efe4cf;--mute:#a89a85;--honey:#d4a24c;--bad:#e5645a;--ok:#6fbf73}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 system-ui,Segoe UI,Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:var(--honey);color:#1b1511;border:0;border-radius:7px;padding:7px 13px;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+button.danger{background:transparent;color:var(--bad);border:1px solid var(--bad)}
+button.sm{padding:3px 9px;font-size:12px}
+button:disabled{opacity:.4;cursor:not-allowed}
+input,textarea,select{background:#150f0b;border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%}
+textarea{font-family:ui-monospace,Consolas,monospace;font-size:13px;min-height:320px;resize:vertical}
+.hidden{display:none!important}
+#login{max-width:380px;margin:12vh auto;padding:28px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+#login h1{margin:0 0 4px;font-size:21px}
+#login p{color:var(--mute);margin:0 0 16px}
+#login input{margin-bottom:10px}
+#login .row{display:flex;gap:8px}
+#login .row button{flex:1}
+header{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--panel);position:sticky;top:0;z-index:5}
+header h1{font-size:16px;margin:0;color:var(--honey)}
+header .sp{flex:1}
+header .who{color:var(--mute);font-size:12px}
+main{padding:18px 20px;max-width:1200px;margin:0 auto}
+.crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:4px;margin-bottom:12px;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+.crumbs a{color:var(--honey);cursor:pointer;text-decoration:none}
+.crumbs a:hover{text-decoration:underline}
+.crumbs span{color:var(--mute)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.bar input[type=search]{max-width:280px}
+.bar .sp{flex:1}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);background:#20180f}
+tr:last-child td{border-bottom:0}
+td.k{font-family:ui-monospace,Consolas,monospace;word-break:break-all}
+td.k a{color:var(--honey);cursor:pointer}
+td.v{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--mute);word-break:break-word;max-width:480px}
+td.a{white-space:nowrap;text-align:right}
+.tag{display:inline-block;padding:1px 8px;border-radius:99px;font-size:11px;border:1px solid var(--line);color:var(--mute)}
+.tag.obj{color:var(--honey);border-color:var(--honey)}
+.empty{padding:34px;text-align:center;color:var(--mute)}
+.leaf{padding:18px}
+.leaf pre{margin:10px 0 0;white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+.warn{background:#3a2a14;border:1px solid #6b4d1c;color:#f0d9a8;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+#modal .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;width:100%;max-width:720px;max-height:92vh;overflow:auto}
+#modal h2{margin:0 0 4px;font-size:17px}
+#modal .p{font-family:ui-monospace,Consolas,monospace;color:var(--mute);font-size:12px;margin-bottom:12px;word-break:break-all}
+#modal label{display:block;font-size:12px;color:var(--mute);margin:10px 0 4px}
+#modal .btns{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--panel);border:1px solid var(--line);padding:10px 18px;border-radius:99px;z-index:30;opacity:0;pointer-events:none;transition:.2s}
+#toast.show{opacity:1}
+#toast.err{border-color:var(--bad);color:var(--bad)}
+#toast.ok{border-color:var(--ok);color:var(--ok)}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <h1>☕ Maple's Bean · Database Editor</h1>
+    <div class="sp"></div>
+    <span class="who" id="who"></span>
+  </header>
+  <main>
+    <div class="crumbs" id="crumbs"></div>
+    <div class="bar">
+      <input type="search" id="filter" placeholder="Filter keys / values…">
+      <button class="ghost" id="btnRefresh">↻ Refresh</button>
+      <span class="sp"></span>
+      <button class="ghost" id="btnExport">⬇ Export JSON</button>
+      <button class="ghost" id="btnImport">⬆ Import JSON</button>
+      <button class="ghost" id="btnEditNode">{ } Edit node as JSON</button>
+      <button id="btnAdd">+ Add child</button>
+    </div>
+    <div id="notice"></div>
+    <div class="card" id="view"></div>
+  </main>
+</div>
+
+<div id="modal" class="hidden"></div>
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script>
+(function () {
+  "use strict";
+  var firebaseConfig = {
+    apiKey: "AIzaSyC9er7KoS8irssT2wk8WDYAO_bhL5uiLa4",
+    authDomain: "hightype-3e77a.firebaseapp.com",
+    databaseURL: "https://hightype-3e77a-default-rtdb.firebaseio.com",
+    projectId: "hightype-3e77a",
+    storageBucket: "hightype-3e77a.firebasestorage.app",
+    messagingSenderId: "795012496754",
+    appId: "1:795012496754:web:e0d3671e36ceec54c071eb"
+  };
+  /* Top-level nodes used by the shop. Shown when the root itself can't be read (rules are per-path). */
+  var KNOWN = ["users","mb_products","orders","carts","reviews","sellers","presence","support_convs","support_msgs","webrtc_calls","ingredients","suppliers","recipes","stockLog","purchaseOrders","cashSessions","refunds","auditTrail","system","sessions"];
+
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.database(), auth = firebase.auth();
+  var $ = function (id) { return document.getElementById(id); };
+  var PATH = "", VAL = null, ROOT_BLOCKED = false, MAXROWS = 500;
+
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var ref = function (p) { return p ? db.ref(p) : db.ref(); };
+  var join = function (a, b) { return a ? a + "/" + b : b; };
+  var typeOf = function (v) { return v === null || v === undefined ? "null" : Array.isArray(v) ? "array" : typeof v; };
+  var isObj = function (v) { return v !== null && typeof v === "object"; };
+  var tt;
+  function toast(m, kind) { var t = $("toast"); t.textContent = m; t.className = "show " + (kind || ""); clearTimeout(tt); tt = setTimeout(function () { t.className = ""; }, 3000); }
+  function parseVal(txt) { txt = txt.trim(); if (txt === "") return ""; try { return JSON.parse(txt); } catch (e) { return txt; } }
+  function pretty(v) { return v === undefined ? "" : JSON.stringify(v, null, 2); }
+  function preview(v) { var s = isObj(v) ? JSON.stringify(v) : JSON.stringify(v); return s && s.length > 140 ? s.slice(0, 140) + "…" : (s || ""); }
+  function cleanKey(k) { return /[.#$\[\]\/]/.test(k) ? null : k; }
+
+  /* ── no login screen ──
+     If this page is hosted on the same site as the shop, it reuses the existing
+     Firebase session automatically. Otherwise it runs without a user (public access only). */
+  var started = false;
+  auth.onAuthStateChanged(function (u) {
+    $("who").textContent = u ? (u.email || u.uid) : "no login · public access only";
+    if (!started) { started = true; PATH = ""; load(); }
+  });
+
+  /* ── load + render ── */
+  async function load() {
+    $("view").innerHTML = '<div class="empty">Loading…</div>'; $("notice").innerHTML = ""; ROOT_BLOCKED = false;
+    try { VAL = (await ref(PATH).once("value")).val(); }
+    catch (e) {
+      if (!PATH) { ROOT_BLOCKED = true; VAL = {}; KNOWN.forEach(function (k) { VAL[k] = "__unloaded__"; }); }
+      else { VAL = null; $("notice").innerHTML = '<div class="warn">Permission denied or failed to read <b>' + esc(PATH) + "</b>: " + esc(e.message) + "</div>"; }
+    }
+    render();
+  }
+  function render() {
+    var parts = PATH ? PATH.split("/") : [], acc = "", c = '<a data-go="">root</a>';
+    parts.forEach(function (p) { acc = join(acc, p); c += "<span>/</span><a data-go=\"" + esc(acc) + "\">" + esc(p) + "</a>"; });
+    $("crumbs").innerHTML = c;
+    $("btnAdd").disabled = !(isObj(VAL) || VAL === null);
+    $("btnImport").disabled = ROOT_BLOCKED; $("btnEditNode").disabled = ROOT_BLOCKED; $("btnExport").disabled = ROOT_BLOCKED && !PATH;
+    if (ROOT_BLOCKED) $("notice").innerHTML = '<div class="warn">The database root can’t be read with your rules, so the known top-level nodes are listed. Open one to browse and edit it.</div>';
+    var v = $("view");
+    if (VAL === null || VAL === undefined) { v.innerHTML = '<div class="empty">No data at this path. Use <b>+ Add child</b> or <b>Edit node as JSON</b> to create it.</div>'; return; }
+    if (!isObj(VAL)) {
+      v.innerHTML = '<div class="leaf"><span class="tag">' + typeOf(VAL) + '</span> <button class="sm" data-act="edit" data-p="' + esc(PATH) + '">Edit value</button> <button class="sm danger" data-act="del" data-p="' + esc(PATH) + '">Delete</button><pre>' + esc(pretty(VAL)) + "</pre></div>"; return;
+    }
+    var q = $("filter").value.toLowerCase(), all = Object.keys(VAL).sort(function (a, b) { return a.localeCompare(b, undefined, { numeric: true }); });
+    var keys = all.filter(function (k) { return !q || k.toLowerCase().indexOf(q) !== -1 || (VAL[k] !== "__unloaded__" && JSON.stringify(VAL[k]).toLowerCase().indexOf(q) !== -1); });
+    var shown = keys.slice(0, MAXROWS);
+    if (!shown.length) { v.innerHTML = '<div class="empty">' + (all.length ? "Nothing matches the filter." : "This node is empty.") + "</div>"; return; }
+    v.innerHTML = "<table><thead><tr><th>Key</th><th>Type</th><th>Value</th><th></th></tr></thead><tbody>" + shown.map(function (k) {
+      var x = VAL[k], p = join(PATH, k), unl = x === "__unloaded__", o = isObj(x);
+      var key = (o || unl) ? '<a data-go="' + esc(p) + '">' + esc(k) + "/</a>" : esc(k);
+      var typ = unl ? '<span class="tag obj">node</span>' : '<span class="tag' + (o ? " obj" : "") + '">' + typeOf(x) + (o ? " · " + Object.keys(x).length : "") + "</span>";
+      var val = unl ? "" : esc(preview(x));
+      var act = unl ? '<button class="sm ghost" data-go="' + esc(p) + '">Open</button>' :
+        (o ? '<button class="sm ghost" data-go="' + esc(p) + '">Open</button> ' : "") + '<button class="sm ghost" data-act="edit" data-p="' + esc(p) + '">Edit</button> <button class="sm danger" data-act="del" data-p="' + esc(p) + '">Delete</button>';
+      return '<tr><td class="k">' + key + "</td><td>" + typ + '</td><td class="v">' + val + '</td><td class="a">' + act + "</td></tr>";
+    }).join("") + "</tbody></table>" + (keys.length > MAXROWS ? '<div class="empty">Showing first ' + MAXROWS + " of " + keys.length + " — use the filter to narrow down.</div>" : "");
+  }
+  function go(p) { PATH = p; $("filter").value = ""; load(); }
+
+  /* ── modal ── */
+  function modal(title, path, body, okLabel, onOk) {
+    var m = $("modal");
+    m.innerHTML = '<div class="box"><h2>' + esc(title) + '</h2><div class="p">/' + esc(path) + "</div>" + body + '<div class="btns"><button class="ghost" id="mCancel">Cancel</button><button id="mOk">' + esc(okLabel) + "</button></div></div>";
+    m.classList.remove("hidden");
+    var close = function () { m.classList.add("hidden"); m.innerHTML = ""; };
+    $("mCancel").onclick = close;
+    m.onclick = function (e) { if (e.target === m) close(); };
+    $("mOk").onclick = async function () { var b = $("mOk"); b.disabled = true; try { await onOk(); close(); } catch (e) { toast(e.message || "Failed", "err"); b.disabled = false; } };
+    var t = m.querySelector("textarea,input"); if (t) t.focus();
+  }
+  async function readAt(p) { return (await ref(p).once("value")).val(); }
+
+  async function editAt(p, asNode) {
+    var cur = await readAt(p);
+    modal(asNode ? "Edit node as JSON" : "Edit value", p, '<label>JSON value (a bare word is saved as text; <code>null</code> deletes the node)</label><textarea id="mVal" spellcheck="false">' + esc(pretty(cur)) + "</textarea>", "Save", async function () {
+      var v = parseVal($("mVal").value);
+      if (v === null) { if (!confirm("Saving null deletes " + (p || "the whole database") + ". Continue?")) throw new Error("Cancelled"); await ref(p).remove(); }
+      else { if (!p && !confirm("This replaces the ENTIRE database. Continue?")) throw new Error("Cancelled"); await ref(p).set(v); }
+      toast("Saved", "ok"); load();
+    });
+  }
+  function addChild() {
+    modal("Add child", PATH, '<label>Key (leave empty for an auto-generated push ID; no . # $ [ ] /)</label><input id="mKey" placeholder="e.g. newKey"><label>Value (JSON, number, true/false or plain text)</label><textarea id="mVal" spellcheck="false" style="min-height:200px"></textarea>', "Add", async function () {
+      var k = $("mKey").value.trim(), v = parseVal($("mVal").value);
+      if (v === "" && !$("mVal").value.trim()) throw new Error("Enter a value");
+      if (k && cleanKey(k) === null) throw new Error("Key contains illegal characters");
+      var r = k ? ref(join(PATH, k)) : ref(PATH).push();
+      if (k && (await r.once("value")).exists() && !confirm("“" + k + "” already exists. Overwrite it?")) throw new Error("Cancelled");
+      await r.set(v); toast("Added", "ok"); load();
+    });
+  }
+  async function delAt(p) {
+    if (!confirm("Delete /" + p + " and everything under it?\nThis cannot be undone.")) return;
+    try { await ref(p).remove(); toast("Deleted", "ok"); if (p === PATH) { PATH = p.split("/").slice(0, -1).join("/"); } load(); }
+    catch (e) { toast("Delete failed: " + e.message, "err"); }
+  }
+
+  /* ── import / export ── */
+  $("btnExport").onclick = async function () {
+    try {
+      var d = ROOT_BLOCKED ? {} : (await readAt(PATH));
+      var a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 2)], { type: "application/json" }));
+      a.download = (PATH ? PATH.replace(/\//g, "_") : "root") + "-" + new Date().toISOString().slice(0, 10) + ".json"; document.body.appendChild(a); a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    } catch (e) { toast("Export failed: " + e.message, "err"); }
+  };
+  $("btnImport").onclick = function () {
+    modal("Import JSON", PATH, '<label>JSON file</label><input type="file" id="mFile" accept=".json,application/json"><label>Or paste JSON</label><textarea id="mVal" spellcheck="false" style="min-height:160px"></textarea><label>Mode</label><select id="mMode"><option value="merge">Merge into this node (update)</option><option value="replace">Replace this node (set)</option></select>', "Import", async function () {
+      var txt = $("mVal").value, f = $("mFile").files[0];
+      if (f) txt = await f.text();
+      var d; try { d = JSON.parse(txt); } catch (e) { throw new Error("Invalid JSON"); }
+      if ($("mMode").value === "replace") { if (!confirm("Replace /" + PATH + " with the imported data?")) throw new Error("Cancelled"); await ref(PATH).set(d); }
+      else { if (!isObj(d)) throw new Error("Merge needs a JSON object"); await ref(PATH).update(d); }
+      toast("Imported", "ok"); load();
+    });
+  };
+
+  /* ── wiring ── */
+  document.addEventListener("click", function (e) {
+    var g = e.target.closest("[data-go]"); if (g) { go(g.getAttribute("data-go")); return; }
+    var a = e.target.closest("[data-act]"); if (!a) return;
+    var p = a.getAttribute("data-p");
+    if (a.getAttribute("data-act") === "edit") editAt(p, false).catch(function (er) { toast(er.message, "err"); });
+    if (a.getAttribute("data-act") === "del") delAt(p);
+  });
+  $("btnRefresh").onclick = load;
+  $("btnAdd").onclick = addChild;
+  $("btnEditNode").onclick = function () { editAt(PATH, true).catch(function (er) { toast(er.message, "err"); }); };
+  $("filter").oninput = render;
+})();
+</script>
+</body>
+</html>
